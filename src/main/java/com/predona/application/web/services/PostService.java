@@ -61,7 +61,36 @@ public class PostService {
             .returning(COMMENTS.ID)
             .fetchOne();
         comment.setId(commentsRecord.getId());
-        return comment; }
+        return comment;
 }
+
+    public List<Post> getAllPosts()
+    {
+    List<Post> posts = new ArrayList<>();
+    Result<Record> result = dsl.select().from(POSTS).fetch();
+    for (Record r : result) {
+        posts.add(getPostEntity(r));
+    }
+    return posts ;
+    }
+
+    public PostService postId(){
+    Record record = dsl.select()
+        .from(POSTS)
+        .where(POSTS.ID.eq(postId))
+        .fetchOne();
+    if(record != null)    {
+        Post post = getPostEntity(record);
+        Result<Record> commentRecords = dsl.select()
+        .from(COMMENTS)
+        .where(COMMENTS.POST_ID.eq(postId))
+        .fetch();
+        for (Record r : commentRecords) {
+            post.addComment(getCommentEntity(r));
+        }
+        return post;
+    }
+    return null;
+)}
 
 
