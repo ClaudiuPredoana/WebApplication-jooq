@@ -91,6 +91,12 @@ public class PostService {
         return post;
     }
     return null;
-)}
+}
+    public void deleteComment(Integer commentId) {
+    dsl.deleteFrom(COMMENTS)
+            .where(COMMENTS.ID.equal(commentId))
+            .execute();
+}
+}
 
 
